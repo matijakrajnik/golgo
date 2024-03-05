@@ -155,8 +155,11 @@ func (g *game) Tapped(event *fyne.PointEvent) {
 		g.board.genCurrent = tmp
 	}
 
-	cellX := int(event.Position.X) / g.board.xCellSize
-	cellY := int(event.Position.Y) / g.board.yCellSize
+	offsetX := (g.Size().Width - float32(g.board.width*g.board.xCellSize)) / 2
+	offsetY := (g.Size().Height - float32(g.board.height*g.board.yCellSize)) / 2
+
+	cellX := int(event.Position.X-offsetX) / g.board.xCellSize
+	cellY := int(event.Position.Y-offsetY) / g.board.yCellSize
 	if cellX < g.board.width && cellY < g.board.height {
 		g.board.genCurrent[cellY][cellX] = !g.board.genCurrent[cellY][cellX]
 	}
