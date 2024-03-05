@@ -138,4 +138,9 @@ func (b *board) countNeighbours(x, y int) int {
 func (b *board) calculateCellSize(w, h int) {
 	b.xCellSize = w / b.width
 	b.yCellSize = h / b.height
+	if b.xCellSize < b.yCellSize {
+		b.yCellSize = b.xCellSize
+	} else {
+		b.xCellSize = b.yCellSize
+	}
 }
