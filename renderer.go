@@ -14,6 +14,7 @@ const minCellSize = 8
 type renderer struct {
 	*board
 	raster        *canvas.Raster
+	objects       []fyne.CanvasObject
 	colorAlive    color.Color
 	colorDead     color.Color
 	colorOverflow color.Color
@@ -22,11 +23,13 @@ type renderer struct {
 func newRenderer(board *board) *renderer {
 	renderer := &renderer{
 		board:         board,
+		objects:       make([]fyne.CanvasObject, 0),
 		colorAlive:    color.White,
 		colorDead:     color.Black,
 		colorOverflow: theme.BackgroundColor(),
 	}
 	renderer.raster = canvas.NewRaster(renderer.drawImage)
+	renderer.objects = append(renderer.objects, renderer.raster)
 
 	return renderer
 }
@@ -70,7 +73,7 @@ func (r *renderer) Refresh() {
 }
 
 func (r *renderer) Objects() []fyne.CanvasObject {
-	return []fyne.CanvasObject{r.raster}
+	return r.objects
 }
 
 func (r *renderer) Destroy() {}
