@@ -12,6 +12,7 @@ type board struct {
 	generation           int
 	width, height        int
 	xCellSize, yCellSize int
+	infinite             bool
 }
 
 func newBoard(width, height int) *board {
@@ -80,6 +81,10 @@ func (b *board) saveStartPattern() {
 }
 
 func (b *board) isAlive(x, y int) bool {
+	if !b.infinite && b.isOverflow(x, y) {
+		return false
+	}
+
 	if x == -1 {
 		x = b.width - 1
 	} else if x == b.width {
@@ -93,6 +98,10 @@ func (b *board) isAlive(x, y int) bool {
 	}
 
 	return b.genCurrent[y][x]
+}
+
+func (b *board) isOverflow(x, y int) bool {
+	return x <= -1 || x >= b.width || y <= -1 || y >= b.height
 }
 
 func (b *board) countNeighbours(x, y int) int {

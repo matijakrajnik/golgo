@@ -65,6 +65,9 @@ func (g *game) buildUI() fyne.CanvasObject {
 		g.reset()
 	})
 
+	infiniteCheck := widget.NewCheck("Infinite board", func(b bool) { g.board.infinite = b })
+	infiniteCheck.SetChecked(true)
+
 	speedRadioButtons := widget.NewRadioGroup([]string{"1x", "5x", "10x", "50x"}, func(s string) {})
 	speedRadioButtons.Horizontal = true
 	speedRadioButtons.Required = true
@@ -91,6 +94,9 @@ func (g *game) buildUI() fyne.CanvasObject {
 			widget.NewSeparator(),
 			pauseButton,
 			resetButton,
+			widget.NewSeparator(),
+			widget.NewSeparator(),
+			infiniteCheck,
 		),
 		container.NewBorder(nil, nil,
 			container.NewHBox(
