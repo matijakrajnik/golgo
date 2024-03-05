@@ -37,8 +37,7 @@ func newRenderer(board *board) *renderer {
 func (r *renderer) drawImage(w, h int) image.Image {
 	img := image.NewRGBA(image.Rect(0, 0, w, h))
 
-	offsetX := (w - r.board.width*r.board.xCellSize) / 2
-	offsetY := (h - r.board.height*r.board.yCellSize) / 2
+	offsetX, offsetY := r.board.calculateOffset(w, h)
 
 	for x := 0; x < w; x++ {
 		for y := 0; y < h; y++ {

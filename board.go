@@ -144,3 +144,7 @@ func (b *board) calculateCellSize(w, h int) {
 		b.xCellSize = b.yCellSize
 	}
 }
+
+func (b *board) calculateOffset(w, h int) (int, int) {
+	return (w - b.width*b.xCellSize) / 2, (h - b.height*b.yCellSize) / 2
+}
