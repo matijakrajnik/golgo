@@ -49,9 +49,11 @@ func (g *game) buildUI() fyne.CanvasObject {
 		if g.paused {
 			pauseButton.SetText("PLAY")
 			pauseButton.SetIcon(theme.MediaPlayIcon())
+			g.patternSelect.Enable()
 		} else {
 			pauseButton.SetText("PAUSE")
 			pauseButton.SetIcon(theme.MediaPauseIcon())
+			g.patternSelect.Disable()
 		}
 	}
 
