@@ -31,9 +31,9 @@ type game struct {
 func newGame() *game {
 	game := &game{
 		sigChan: make(chan signal),
-		board:   newBoard(boardWidth, boardHeight),
+		board:   newBoard(),
 		paused:  true,
-		speed:   1,
+		speed:   preferences.IntWithFallback(prefKeys[speedKey], 1),
 	}
 	game.ExtendBaseWidget(game)
 	return game
@@ -65,13 +65,16 @@ func (g *game) buildUI() fyne.CanvasObject {
 		g.reset()
 	})
 
-	infiniteCheck := widget.NewCheck("Infinite board", func(b bool) { g.board.infinite = b })
-	infiniteCheck.SetChecked(true)
+	infiniteCheck := widget.NewCheck("Infinite board", func(b bool) {
+		g.board.infinite = b
+		preferences.SetBool(prefKeys[infiniteBoardKey], b)
+	})
+	infiniteCheck.SetChecked(preferences.BoolWithFallback(prefKeys[infiniteBoardKey], true))
 
 	speedRadioButtons := widget.NewRadioGroup([]string{"1x", "5x", "10x", "50x"}, func(s string) {})
 	speedRadioButtons.Horizontal = true
 	speedRadioButtons.Required = true
-	speedRadioButtons.SetSelected("1x")
+	speedRadioButtons.SetSelected(fmt.Sprintf("%dx", preferences.IntWithFallback(prefKeys[speedKey], 1)))
 	speedRadioButtons.OnChanged = func(s string) {
 		re := regexp.MustCompile(`(\d+)x`)
 		matches := re.FindStringSubmatch(s)
@@ -83,6 +86,7 @@ func (g *game) buildUI() fyne.CanvasObject {
 			return
 		}
 		g.speed = speed
+		preferences.SetInt(prefKeys[speedKey], speed)
 		g.sigChan <- newSpeedSignal
 	}
 

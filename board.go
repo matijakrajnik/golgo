@@ -1,8 +1,8 @@
 package main
 
 const (
-	boardWidth  = 60
-	boardHeight = 40
+	defaultBoardWidth  = 60
+	defaultBoardHeight = 40
 )
 
 type board struct {
@@ -15,12 +15,13 @@ type board struct {
 	infinite             bool
 }
 
-func newBoard(width, height int) *board {
+func newBoard() *board {
 	board := &board{
-		width:      width,
-		height:     height,
+		width:      preferences.IntWithFallback(prefKeys[boardWidthKey], defaultBoardWidth),
+		height:     preferences.IntWithFallback(prefKeys[boardHeightKey], defaultBoardHeight),
 		generation: 0,
 	}
+	board.infinite = preferences.BoolWithFallback(prefKeys[infiniteBoardKey], false)
 	board.initGrid()
 
 	return board
