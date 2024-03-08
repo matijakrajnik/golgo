@@ -15,6 +15,7 @@ func main() {
 	window.SetContent(game.buildUI())
 	window.Resize(fyne.Size{Width: 900, Height: 600})
 	window.CenterOnScreen()
+	game.setKeyPressListener(window)
 	game.run()
 	window.ShowAndRun()
 }

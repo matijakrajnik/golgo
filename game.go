@@ -21,19 +21,22 @@ const (
 type game struct {
 	widget.BaseWidget
 	*board
-	sigChan         chan signal
-	patternSelect   *widget.Select
-	generationLabel *widget.Label
-	paused          bool
-	speed           int
+	sigChan           chan signal
+	patternSelect     *widget.Select
+	generationLabel   *widget.Label
+	speedRadioButtons *widget.RadioGroup
+	speedList         []string
+	paused            bool
+	speed             int
 }
 
 func newGame() *game {
 	game := &game{
-		sigChan: make(chan signal),
-		board:   newBoard(),
-		paused:  true,
-		speed:   preferences.IntWithFallback(prefKeys[speedKey], 1),
+		sigChan:   make(chan signal),
+		board:     newBoard(),
+		paused:    true,
+		speed:     preferences.IntWithFallback(prefKeys[speedKey], 1),
+		speedList: []string{"1x", "5x", "10x", "50x"},
 	}
 	game.ExtendBaseWidget(game)
 	return game
@@ -74,11 +77,11 @@ func (g *game) buildUI() fyne.CanvasObject {
 	})
 	infiniteCheck.SetChecked(preferences.BoolWithFallback(prefKeys[infiniteBoardKey], true))
 
-	speedRadioButtons := widget.NewRadioGroup([]string{"1x", "5x", "10x", "50x"}, func(s string) {})
-	speedRadioButtons.Horizontal = true
-	speedRadioButtons.Required = true
-	speedRadioButtons.SetSelected(fmt.Sprintf("%dx", preferences.IntWithFallback(prefKeys[speedKey], 1)))
-	speedRadioButtons.OnChanged = func(s string) {
+	g.speedRadioButtons = widget.NewRadioGroup(g.speedList, func(s string) {})
+	g.speedRadioButtons.Horizontal = true
+	g.speedRadioButtons.Required = true
+	g.speedRadioButtons.SetSelected(fmt.Sprintf("%dx", preferences.IntWithFallback(prefKeys[speedKey], 1)))
+	g.speedRadioButtons.OnChanged = func(s string) {
 		re := regexp.MustCompile(`(\d+)x`)
 		matches := re.FindStringSubmatch(s)
 		if len(matches) < 1 {
@@ -108,7 +111,7 @@ func (g *game) buildUI() fyne.CanvasObject {
 		container.NewBorder(nil, nil,
 			container.NewHBox(
 				widget.NewLabel("Speed:"),
-				speedRadioButtons,
+				g.speedRadioButtons,
 			),
 			g.generationLabel,
 		),
@@ -182,3 +185,25 @@ func (g *game) Tapped(event *fyne.PointEvent) {
 }
 
 func (g *game) TappedSecondary(*fyne.PointEvent) {}
+
+func (g *game) setKeyPressListener(window fyne.Window) {
+	window.Canvas().SetOnTypedKey(func(ke *fyne.KeyEvent) {
+		index := 0
+		for i, v := range g.speedList {
+			if v == g.speedRadioButtons.Selected {
+				index = i
+			}
+		}
+		if ke.Name == fyne.KeyUp {
+			if index+1 < len(g.speedList) {
+				index++
+			}
+		}
+		if ke.Name == fyne.KeyDown {
+			if index > 0 {
+				index--
+			}
+		}
+		g.speedRadioButtons.SetSelected(g.speedList[index])
+	})
+}
