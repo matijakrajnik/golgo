@@ -162,6 +162,14 @@ func (g *game) Tapped(event *fyne.PointEvent) {
 	}
 
 	offsetX, offsetY := g.board.calculateOffset(int(g.Size().Width), int(g.Size().Height))
+	clickedOutsideGrid := event.Position.X < float32(offsetX) ||
+		event.Position.Y < float32(offsetY) ||
+		event.Position.X > g.Size().Width-float32(offsetX) ||
+		event.Position.Y > g.Size().Height-float32(offsetY)
+
+	if clickedOutsideGrid {
+		return
+	}
 
 	cellX := int(event.Position.X-float32(offsetX)) / g.board.xCellSize
 	cellY := int(event.Position.Y-float32(offsetY)) / g.board.yCellSize
