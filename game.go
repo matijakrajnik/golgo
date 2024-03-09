@@ -28,6 +28,7 @@ type game struct {
 	patternSelect     *widget.Select
 	generationLabel   *widget.Label
 	speedRadioButtons *widget.RadioGroup
+	playButton        *widget.Button
 	clearBoardButton  *widget.Button
 	resizeButton      *widget.Button
 	speedList         []string
@@ -51,33 +52,17 @@ func (g *game) buildUI() fyne.CanvasObject {
 	g.generationLabel = widget.NewLabel(g.genText())
 	g.patternSelect = generatePatterns(g)
 
-	pauseButton := widget.NewButtonWithIcon("PLAY", theme.MediaPlayIcon(), func() {})
-	pauseButton.OnTapped = func() {
-		g.paused = !g.paused
+	g.playButton = widget.NewButtonWithIcon("PLAY", theme.MediaPlayIcon(), func() {})
+	g.playButton.OnTapped = func() {
 		if g.paused {
-			pauseButton.SetText("PLAY")
-			pauseButton.SetIcon(theme.MediaPlayIcon())
-			g.patternSelect.Enable()
-			g.resizeButton.Enable()
-			g.clearBoardButton.Enable()
+			g.play()
 		} else {
-			pauseButton.SetText("PAUSE")
-			pauseButton.SetIcon(theme.MediaPauseIcon())
-			g.patternSelect.Disable()
-			g.resizeButton.Disable()
-			g.clearBoardButton.Disable()
+			g.pause()
 		}
 	}
 
 	resetButton := widget.NewButtonWithIcon("RESET", theme.MediaReplayIcon(), func() {
-		if !g.paused {
-			pauseButton.SetText("PLAY")
-			pauseButton.SetIcon(theme.MediaPlayIcon())
-		}
-		g.paused = true
-		g.patternSelect.Enable()
-		g.resizeButton.Enable()
-		g.clearBoardButton.Enable()
+		g.pause()
 		g.board.restart()
 		g.reset()
 	})
@@ -138,7 +123,7 @@ func (g *game) buildUI() fyne.CanvasObject {
 				widget.NewLabel("Pattern:"),
 				g.patternSelect,
 				widget.NewSeparator(),
-				pauseButton,
+				g.playButton,
 				resetButton,
 				widget.NewSeparator(),
 				infiniteCheck,
@@ -246,6 +231,24 @@ func (g *game) reset() {
 
 func (g *game) genText() string {
 	return fmt.Sprintf("Generation: %d", g.board.generation)
+}
+
+func (g *game) play() {
+	g.paused = false
+	g.playButton.SetText("PAUSE")
+	g.playButton.SetIcon(theme.MediaPauseIcon())
+	g.patternSelect.Disable()
+	g.resizeButton.Disable()
+	g.clearBoardButton.Disable()
+}
+
+func (g *game) pause() {
+	g.paused = true
+	g.playButton.SetText("PLAY")
+	g.playButton.SetIcon(theme.MediaPlayIcon())
+	g.patternSelect.Enable()
+	g.resizeButton.Enable()
+	g.clearBoardButton.Enable()
 }
 
 func (g *game) CreateRenderer() fyne.WidgetRenderer {
