@@ -6,7 +6,7 @@ import (
 )
 
 func boardSizeValidator(s string) error {
-	min, max := 10, 100
+	min, max := 15, 100
 	returnErr := fmt.Errorf("value must be a number between %d and %d", min, max)
 
 	n, err := strconv.Atoi(s)
