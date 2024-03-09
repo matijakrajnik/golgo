@@ -8,6 +8,7 @@ import (
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 )
@@ -16,6 +17,7 @@ type signal int
 
 const (
 	newSpeedSignal signal = iota
+	stopSignal
 )
 
 type game struct {
@@ -25,6 +27,7 @@ type game struct {
 	patternSelect     *widget.Select
 	generationLabel   *widget.Label
 	speedRadioButtons *widget.RadioGroup
+	resizeButton      *widget.Button
 	speedList         []string
 	paused            bool
 	speed             int
@@ -53,10 +56,12 @@ func (g *game) buildUI() fyne.CanvasObject {
 			pauseButton.SetText("PLAY")
 			pauseButton.SetIcon(theme.MediaPlayIcon())
 			g.patternSelect.Enable()
+			g.resizeButton.Enable()
 		} else {
 			pauseButton.SetText("PAUSE")
 			pauseButton.SetIcon(theme.MediaPauseIcon())
 			g.patternSelect.Disable()
+			g.resizeButton.Disable()
 		}
 	}
 
@@ -67,6 +72,7 @@ func (g *game) buildUI() fyne.CanvasObject {
 		}
 		g.paused = true
 		g.patternSelect.Enable()
+		g.resizeButton.Enable()
 		g.board.restart()
 		g.reset()
 	})
@@ -96,15 +102,15 @@ func (g *game) buildUI() fyne.CanvasObject {
 		g.sigChan <- newSpeedSignal
 	}
 
+	g.resizeButton = widget.NewButton("RESIZE", func() { g.buildResizeDialog().Show() })
+
 	return container.NewBorder(
 		container.NewHBox(
 			widget.NewLabel("Pattern:"),
 			g.patternSelect,
 			widget.NewSeparator(),
-			widget.NewSeparator(),
 			pauseButton,
 			resetButton,
-			widget.NewSeparator(),
 			widget.NewSeparator(),
 			infiniteCheck,
 		),
@@ -112,11 +118,60 @@ func (g *game) buildUI() fyne.CanvasObject {
 			container.NewHBox(
 				widget.NewLabel("Speed:"),
 				g.speedRadioButtons,
+				widget.NewSeparator(),
+				g.generationLabel,
 			),
-			g.generationLabel,
+			container.NewHBox(
+				g.resizeButton,
+				widget.NewSeparator(),
+			),
 		),
 		nil, nil, g,
 	)
+}
+
+func (g *game) buildResizeDialog() dialog.Dialog {
+	heightEntry := widget.NewEntry()
+	heightEntry.Validator = boardSizeValidator
+	heightEntry.SetText(fmt.Sprint(g.board.height))
+	heightItem := widget.NewFormItem("Height:", heightEntry)
+	heightItem.HintText = "Number of board rows"
+
+	widthEntry := widget.NewEntry()
+	widthEntry.Validator = boardSizeValidator
+	widthEntry.SetText(fmt.Sprint(g.board.width))
+	widthItem := widget.NewFormItem("Width:", widthEntry)
+	widthItem.HintText = "Number of board columns"
+
+	defaultsButton := widget.NewButton("Reset default", func() {
+		heightEntry.SetText(fmt.Sprint(defaultBoardHeight))
+		widthEntry.SetText(fmt.Sprint(defaultBoardWidth))
+	})
+	defaultsItem := widget.NewFormItem("", defaultsButton)
+
+	items := []*widget.FormItem{heightItem, widthItem, defaultsItem}
+
+	return dialog.NewForm("Resize board", "RESIZE", "CANCEL", items, func(confirmed bool) {
+		if confirmed {
+			h, err := strconv.Atoi(heightEntry.Text)
+			if err != nil {
+				dialog.ShowError(err, mainWindow)
+			}
+
+			w, err := strconv.Atoi(widthEntry.Text)
+			if err != nil {
+				dialog.ShowError(err, mainWindow)
+			}
+
+			preferences.SetInt(prefKeys[boardHeightKey], h)
+			preferences.SetInt(prefKeys[boardWidthKey], w)
+
+			g.stop()
+			theGame = newGame()
+			mainWindow.SetContent(theGame.buildUI())
+			theGame.run()
+		}
+	}, mainWindow)
 }
 
 func (g *game) run() {
@@ -132,12 +187,20 @@ func (g *game) run() {
 				g.generationLabel.SetText(g.genText())
 				g.Refresh()
 			case sig := <-sc:
-				if sig == newSpeedSignal {
+				switch sig {
+				case newSpeedSignal:
 					ticker.Reset(time.Second / time.Duration(g.speed))
+				case stopSignal:
+					g.paused = true
+					ticker.Stop()
 				}
 			}
 		}
 	}(g.sigChan)
+}
+
+func (g *game) stop() {
+	g.sigChan <- stopSignal
 }
 
 func (g *game) reset() {

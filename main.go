@@ -7,15 +7,20 @@ import (
 
 const appID = "com.github.matijakrajnik.golgo"
 
+var (
+	mainWindow fyne.Window
+	theGame    *game
+)
+
 func main() {
 	app := app.NewWithID(appID)
 	loadPreferences(app)
-	window := app.NewWindow("Game of life")
-	game := newGame()
-	window.SetContent(game.buildUI())
-	window.Resize(fyne.Size{Width: 900, Height: 600})
-	window.CenterOnScreen()
-	game.setKeyPressListener(window)
-	game.run()
-	window.ShowAndRun()
+	mainWindow = app.NewWindow("Game of life")
+	theGame = newGame()
+	mainWindow.SetContent(theGame.buildUI())
+	mainWindow.Resize(fyne.Size{Width: 900, Height: 600})
+	mainWindow.CenterOnScreen()
+	theGame.setKeyPressListener(mainWindow)
+	theGame.run()
+	mainWindow.ShowAndRun()
 }
