@@ -28,6 +28,7 @@ type game struct {
 	patternSelect     *widget.Select
 	generationLabel   *widget.Label
 	speedRadioButtons *widget.RadioGroup
+	clearBoardButton  *widget.Button
 	resizeButton      *widget.Button
 	speedList         []string
 	paused            bool
@@ -58,11 +59,13 @@ func (g *game) buildUI() fyne.CanvasObject {
 			pauseButton.SetIcon(theme.MediaPlayIcon())
 			g.patternSelect.Enable()
 			g.resizeButton.Enable()
+			g.clearBoardButton.Enable()
 		} else {
 			pauseButton.SetText("PAUSE")
 			pauseButton.SetIcon(theme.MediaPauseIcon())
 			g.patternSelect.Disable()
 			g.resizeButton.Disable()
+			g.clearBoardButton.Disable()
 		}
 	}
 
@@ -74,6 +77,7 @@ func (g *game) buildUI() fyne.CanvasObject {
 		g.paused = true
 		g.patternSelect.Enable()
 		g.resizeButton.Enable()
+		g.clearBoardButton.Enable()
 		g.board.restart()
 		g.reset()
 	})
@@ -83,6 +87,17 @@ func (g *game) buildUI() fyne.CanvasObject {
 		preferences.SetBool(prefKeys[infiniteBoardKey], b)
 	})
 	infiniteCheck.SetChecked(preferences.BoolWithFallback(prefKeys[infiniteBoardKey], true))
+
+	g.clearBoardButton = widget.NewButtonWithIcon("", theme.DeleteIcon(), func() {})
+	g.clearBoardButton.OnTapped = func() {
+		dialog.ShowConfirm("Clear board", "This will clear all tiles on board. Continue?", func(confirmed bool) {
+			if confirmed {
+				g.patternSelect.ClearSelected()
+				g.board.initGrid()
+				g.reset()
+			}
+		}, mainWindow)
+	}
 
 	g.speedRadioButtons = widget.NewRadioGroup(g.speedList, func(s string) {})
 	g.speedRadioButtons.Horizontal = true
@@ -118,14 +133,19 @@ func (g *game) buildUI() fyne.CanvasObject {
 	g.resizeButton = widget.NewButton("RESIZE", func() { g.buildResizeDialog().Show() })
 
 	return container.NewBorder(
-		container.NewHBox(
-			widget.NewLabel("Pattern:"),
-			g.patternSelect,
-			widget.NewSeparator(),
-			pauseButton,
-			resetButton,
-			widget.NewSeparator(),
-			infiniteCheck,
+		container.NewBorder(nil, nil,
+			container.NewHBox(
+				widget.NewLabel("Pattern:"),
+				g.patternSelect,
+				widget.NewSeparator(),
+				pauseButton,
+				resetButton,
+				widget.NewSeparator(),
+				infiniteCheck,
+			),
+			container.NewHBox(
+				g.clearBoardButton,
+			),
 		),
 		container.NewBorder(nil, nil,
 			container.NewHBox(
