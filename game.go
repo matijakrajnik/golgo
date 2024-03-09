@@ -8,6 +8,7 @@ import (
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
@@ -102,6 +103,18 @@ func (g *game) buildUI() fyne.CanvasObject {
 		g.sigChan <- newSpeedSignal
 	}
 
+	heightLabelBind := binding.NewString()
+	if err := heightLabelBind.Set(fmt.Sprintf("H: %d", g.board.height)); err != nil {
+		dialog.ShowError(err, mainWindow)
+	}
+	heightLabel := widget.NewLabelWithData(heightLabelBind)
+
+	widthLabelBind := binding.NewString()
+	if err := widthLabelBind.Set(fmt.Sprintf("W: %d", g.board.width)); err != nil {
+		dialog.ShowError(err, mainWindow)
+	}
+	widthLabel := widget.NewLabelWithData(widthLabelBind)
+
 	g.resizeButton = widget.NewButton("RESIZE", func() { g.buildResizeDialog().Show() })
 
 	return container.NewBorder(
@@ -124,6 +137,8 @@ func (g *game) buildUI() fyne.CanvasObject {
 			container.NewHBox(
 				g.resizeButton,
 				widget.NewSeparator(),
+				heightLabel,
+				widthLabel,
 			),
 		),
 		nil, nil, g,
