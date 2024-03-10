@@ -88,6 +88,13 @@ func (b *board) setStartingPattern(pattern [][]bool) {
 	b.saveStartPattern()
 }
 
+func (b *board) setCell(x, y int) {
+	if x < 0 || x >= b.height || y < 0 || y >= b.width {
+		return
+	}
+	b.genCurrent[y][x] = true
+}
+
 func (b *board) isAlive(x, y int) bool {
 	if !b.infinite && b.isOverflow(x, y) {
 		return false

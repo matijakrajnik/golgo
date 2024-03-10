@@ -12,143 +12,143 @@ func generatePatterns(g *game) *widget.Select {
 		midX, midY := g.board.width/2, g.board.height/2
 		switch pattern {
 		case "Blinker":
-			g.board.genCurrent[midY][midX-1] = true
-			g.board.genCurrent[midY][midX] = true
-			g.board.genCurrent[midY][midX+1] = true
+			g.board.setCell(midX-1, midY)
+			g.board.setCell(midX, midY)
+			g.board.setCell(midX+1, midY)
 		case "Toad":
-			g.board.genCurrent[midY][midX-1] = true
-			g.board.genCurrent[midY][midX] = true
-			g.board.genCurrent[midY][midX+1] = true
+			g.board.setCell(midX-1, midY)
+			g.board.setCell(midX, midY)
+			g.board.setCell(midX+1, midY)
 
-			g.board.genCurrent[midY+1][midX-2] = true
-			g.board.genCurrent[midY+1][midX-1] = true
-			g.board.genCurrent[midY+1][midX] = true
+			g.board.setCell(midX-2, midY+1)
+			g.board.setCell(midX-1, midY+1)
+			g.board.setCell(midX, midY+1)
 		case "Pulsar":
-			g.board.genCurrent[midY-6][midX-2] = true
-			g.board.genCurrent[midY-6][midX-3] = true
-			g.board.genCurrent[midY-6][midX-4] = true
+			g.board.setCell(midX-2, midY-6)
+			g.board.setCell(midX-3, midY-6)
+			g.board.setCell(midX-4, midY-6)
 
-			g.board.genCurrent[midY-6][midX+2] = true
-			g.board.genCurrent[midY-6][midX+3] = true
-			g.board.genCurrent[midY-6][midX+4] = true
+			g.board.setCell(midX+2, midY-6)
+			g.board.setCell(midX+3, midY-6)
+			g.board.setCell(midX+4, midY-6)
 
-			g.board.genCurrent[midY-4][midX-6] = true
-			g.board.genCurrent[midY-3][midX-6] = true
-			g.board.genCurrent[midY-2][midX-6] = true
+			g.board.setCell(midX-6, midY-4)
+			g.board.setCell(midX-6, midY-3)
+			g.board.setCell(midX-6, midY-2)
 
-			g.board.genCurrent[midY-4][midX-1] = true
-			g.board.genCurrent[midY-3][midX-1] = true
-			g.board.genCurrent[midY-2][midX-1] = true
+			g.board.setCell(midX-1, midY-4)
+			g.board.setCell(midX-1, midY-3)
+			g.board.setCell(midX-1, midY-2)
 
-			g.board.genCurrent[midY-4][midX+1] = true
-			g.board.genCurrent[midY-3][midX+1] = true
-			g.board.genCurrent[midY-2][midX+1] = true
+			g.board.setCell(midX+1, midY-4)
+			g.board.setCell(midX+1, midY-3)
+			g.board.setCell(midX+1, midY-2)
 
-			g.board.genCurrent[midY-4][midX+6] = true
-			g.board.genCurrent[midY-3][midX+6] = true
-			g.board.genCurrent[midY-2][midX+6] = true
+			g.board.setCell(midX+6, midY-4)
+			g.board.setCell(midX+6, midY-3)
+			g.board.setCell(midX+6, midY-2)
 
-			g.board.genCurrent[midY-1][midX-2] = true
-			g.board.genCurrent[midY-1][midX-3] = true
-			g.board.genCurrent[midY-1][midX-4] = true
+			g.board.setCell(midX-2, midY-1)
+			g.board.setCell(midX-3, midY-1)
+			g.board.setCell(midX-4, midY-1)
 
-			g.board.genCurrent[midY-1][midX+2] = true
-			g.board.genCurrent[midY-1][midX+3] = true
-			g.board.genCurrent[midY-1][midX+4] = true
+			g.board.setCell(midX+2, midY-1)
+			g.board.setCell(midX+3, midY-1)
+			g.board.setCell(midX+4, midY-1)
 
-			g.board.genCurrent[midY+1][midX-2] = true
-			g.board.genCurrent[midY+1][midX-3] = true
-			g.board.genCurrent[midY+1][midX-4] = true
+			g.board.setCell(midX-2, midY+1)
+			g.board.setCell(midX-3, midY+1)
+			g.board.setCell(midX-4, midY+1)
 
-			g.board.genCurrent[midY+1][midX+2] = true
-			g.board.genCurrent[midY+1][midX+3] = true
-			g.board.genCurrent[midY+1][midX+4] = true
+			g.board.setCell(midX+2, midY+1)
+			g.board.setCell(midX+3, midY+1)
+			g.board.setCell(midX+4, midY+1)
 
-			g.board.genCurrent[midY+2][midX-6] = true
-			g.board.genCurrent[midY+3][midX-6] = true
-			g.board.genCurrent[midY+4][midX-6] = true
+			g.board.setCell(midX-6, midY+2)
+			g.board.setCell(midX-6, midY+3)
+			g.board.setCell(midX-6, midY+4)
 
-			g.board.genCurrent[midY+2][midX-1] = true
-			g.board.genCurrent[midY+3][midX-1] = true
-			g.board.genCurrent[midY+4][midX-1] = true
+			g.board.setCell(midX-1, midY+2)
+			g.board.setCell(midX-1, midY+3)
+			g.board.setCell(midX-1, midY+4)
 
-			g.board.genCurrent[midY+2][midX+1] = true
-			g.board.genCurrent[midY+3][midX+1] = true
-			g.board.genCurrent[midY+4][midX+1] = true
+			g.board.setCell(midX+1, midY+2)
+			g.board.setCell(midX+1, midY+3)
+			g.board.setCell(midX+1, midY+4)
 
-			g.board.genCurrent[midY+2][midX+6] = true
-			g.board.genCurrent[midY+3][midX+6] = true
-			g.board.genCurrent[midY+4][midX+6] = true
+			g.board.setCell(midX+6, midY+2)
+			g.board.setCell(midX+6, midY+3)
+			g.board.setCell(midX+6, midY+4)
 
-			g.board.genCurrent[midY+6][midX-2] = true
-			g.board.genCurrent[midY+6][midX-3] = true
-			g.board.genCurrent[midY+6][midX-4] = true
+			g.board.setCell(midX-2, midY+6)
+			g.board.setCell(midX-3, midY+6)
+			g.board.setCell(midX-4, midY+6)
 
-			g.board.genCurrent[midY+6][midX+2] = true
-			g.board.genCurrent[midY+6][midX+3] = true
-			g.board.genCurrent[midY+6][midX+4] = true
+			g.board.setCell(midX+2, midY+6)
+			g.board.setCell(midX+3, midY+6)
+			g.board.setCell(midX+4, midY+6)
 		case "Glider":
-			g.board.genCurrent[midY+1][midX-1] = true
-			g.board.genCurrent[midY+1][midX] = true
-			g.board.genCurrent[midY+1][midX+1] = true
+			g.board.setCell(midX-1, midY+1)
+			g.board.setCell(midX, midY+1)
+			g.board.setCell(midX+1, midY+1)
 
-			g.board.genCurrent[midY][midX+1] = true
-			g.board.genCurrent[midY-1][midX] = true
+			g.board.setCell(midX+1, midY)
+			g.board.setCell(midX, midY-1)
 		case "Heavy- weight spaceship":
-			g.board.genCurrent[midY][midX-3] = true
-			g.board.genCurrent[midY][midX-2] = true
-			g.board.genCurrent[midY][midX-1] = true
-			g.board.genCurrent[midY][midX] = true
-			g.board.genCurrent[midY][midX+1] = true
-			g.board.genCurrent[midY][midX+2] = true
+			g.board.setCell(midX-3, midY)
+			g.board.setCell(midX-2, midY)
+			g.board.setCell(midX-1, midY)
+			g.board.setCell(midX, midY)
+			g.board.setCell(midX+1, midY)
+			g.board.setCell(midX+2, midY)
 
-			g.board.genCurrent[midY-1][midX-3] = true
-			g.board.genCurrent[midY-2][midX-3] = true
-			g.board.genCurrent[midY-3][midX-2] = true
-			g.board.genCurrent[midY-4][midX] = true
-			g.board.genCurrent[midY-4][midX+1] = true
-			g.board.genCurrent[midY-3][midX+3] = true
-			g.board.genCurrent[midY-1][midX+3] = true
+			g.board.setCell(midX-3, midY-1)
+			g.board.setCell(midX-3, midY-2)
+			g.board.setCell(midX-2, midY-3)
+			g.board.setCell(midX, midY-4)
+			g.board.setCell(midX+1, midY-4)
+			g.board.setCell(midX+3, midY-3)
+			g.board.setCell(midX+3, midY-1)
 		case "Gosper glider gun":
-			g.board.genCurrent[midY][midX] = true
-			g.board.genCurrent[midY-1][midX-1] = true
-			g.board.genCurrent[midY][midX-1] = true
-			g.board.genCurrent[midY+1][midX-1] = true
-			g.board.genCurrent[midY-2][midX-2] = true
-			g.board.genCurrent[midY+2][midX-2] = true
-			g.board.genCurrent[midY][midX-3] = true
-			g.board.genCurrent[midY-3][midX-4] = true
-			g.board.genCurrent[midY+3][midX-4] = true
-			g.board.genCurrent[midY-3][midX-5] = true
-			g.board.genCurrent[midY+3][midX-5] = true
-			g.board.genCurrent[midY-2][midX-6] = true
-			g.board.genCurrent[midY+2][midX-6] = true
-			g.board.genCurrent[midY-1][midX-7] = true
-			g.board.genCurrent[midY][midX-7] = true
-			g.board.genCurrent[midY+1][midX-7] = true
+			g.board.setCell(midX, midY)
+			g.board.setCell(midX-1, midY-1)
+			g.board.setCell(midX-1, midY)
+			g.board.setCell(midX-1, midY+1)
+			g.board.setCell(midX-2, midY-2)
+			g.board.setCell(midX-2, midY+2)
+			g.board.setCell(midX-3, midY)
+			g.board.setCell(midX-4, midY-3)
+			g.board.setCell(midX-4, midY+3)
+			g.board.setCell(midX-5, midY-3)
+			g.board.setCell(midX-5, midY+3)
+			g.board.setCell(midX-6, midY-2)
+			g.board.setCell(midX-6, midY+2)
+			g.board.setCell(midX-7, midY-1)
+			g.board.setCell(midX-7, midY)
+			g.board.setCell(midX-7, midY+1)
 
-			g.board.genCurrent[midY-1][midX-16] = true
-			g.board.genCurrent[midY][midX-16] = true
-			g.board.genCurrent[midY-1][midX-17] = true
-			g.board.genCurrent[midY][midX-17] = true
+			g.board.setCell(midX-16, midY-1)
+			g.board.setCell(midX-16, midY)
+			g.board.setCell(midX-17, midY-1)
+			g.board.setCell(midX-17, midY)
 
-			g.board.genCurrent[midY-3][midX+3] = true
-			g.board.genCurrent[midY-2][midX+3] = true
-			g.board.genCurrent[midY-1][midX+3] = true
-			g.board.genCurrent[midY-3][midX+4] = true
-			g.board.genCurrent[midY-2][midX+4] = true
-			g.board.genCurrent[midY-1][midX+4] = true
-			g.board.genCurrent[midY-4][midX+5] = true
-			g.board.genCurrent[midY][midX+5] = true
-			g.board.genCurrent[midY-4][midX+7] = true
-			g.board.genCurrent[midY][midX+7] = true
-			g.board.genCurrent[midY-5][midX+7] = true
-			g.board.genCurrent[midY+1][midX+7] = true
+			g.board.setCell(midX+3, midY-3)
+			g.board.setCell(midX+3, midY-2)
+			g.board.setCell(midX+3, midY-1)
+			g.board.setCell(midX+4, midY-3)
+			g.board.setCell(midX+4, midY-2)
+			g.board.setCell(midX+4, midY-1)
+			g.board.setCell(midX+5, midY-4)
+			g.board.setCell(midX+5, midY)
+			g.board.setCell(midX+7, midY-4)
+			g.board.setCell(midX+7, midY)
+			g.board.setCell(midX+7, midY-5)
+			g.board.setCell(midX+7, midY+1)
 
-			g.board.genCurrent[midY-2][midX+17] = true
-			g.board.genCurrent[midY-3][midX+17] = true
-			g.board.genCurrent[midY-2][midX+18] = true
-			g.board.genCurrent[midY-3][midX+18] = true
+			g.board.setCell(midX+17, midY-2)
+			g.board.setCell(midX+17, midY-3)
+			g.board.setCell(midX+18, midY-2)
+			g.board.setCell(midX+18, midY-3)
 		}
 		g.reset()
 	})
