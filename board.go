@@ -89,7 +89,7 @@ func (b *board) setStartingPattern(pattern [][]bool) {
 }
 
 func (b *board) setCell(x, y int) {
-	if x < 0 || x >= b.height || y < 0 || y >= b.width {
+	if x < 0 || x >= b.width || y < 0 || y >= b.height {
 		return
 	}
 	b.genCurrent[y][x] = true
