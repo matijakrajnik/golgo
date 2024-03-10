@@ -132,11 +132,17 @@ func newBoardMenu(g *game) *fyne.Menu {
 
 func newHelpMenu(*game) *fyne.Menu {
 	shortcutsItem := fyne.NewMenuItem("Shortcuts", func() {
-		content := container.NewVBox(
-			widget.NewLabel("Speed up:\t\t<KeyUp>"),
-			widget.NewSeparator(),
-			widget.NewLabel("Speed down:\t<KeyDown>"),
-			widget.NewSeparator(),
+		content := container.NewGridWithColumns(2,
+			container.NewVBox(
+				widget.NewLabel("Play/Pause:"),
+				widget.NewLabel("Speed up:"),
+				widget.NewLabel("Speed down:"),
+			),
+			container.NewVBox(
+				widget.NewLabelWithStyle("<SpaceKey>", fyne.TextAlignLeading, fyne.TextStyle{Bold: true}),
+				widget.NewLabelWithStyle("<KeyUp>", fyne.TextAlignLeading, fyne.TextStyle{Bold: true}),
+				widget.NewLabelWithStyle("<KeyDown>", fyne.TextAlignLeading, fyne.TextStyle{Bold: true}),
+			),
 		)
 		dialog.NewCustom("SHORTCUTS", "CLOSE", content, mainWindow).Show()
 	})

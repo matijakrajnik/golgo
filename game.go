@@ -55,14 +55,7 @@ func (g *game) buildUI() fyne.CanvasObject {
 	g.patternLabel.TextStyle.Bold = true
 	g.patternLabel.Alignment = fyne.TextAlignCenter
 
-	g.playButton = widget.NewButtonWithIcon("PLAY", theme.MediaPlayIcon(), func() {})
-	g.playButton.OnTapped = func() {
-		if g.paused {
-			g.play()
-		} else {
-			g.pause()
-		}
-	}
+	g.playButton = widget.NewButtonWithIcon("PLAY", theme.MediaPlayIcon(), g.toggleRun)
 
 	resetButton := widget.NewButtonWithIcon("RESET", theme.MediaReplayIcon(), func() {
 		g.pause()
@@ -234,6 +227,14 @@ func (g *game) genText() string {
 	return fmt.Sprintf("Generation: %d", g.board.generation)
 }
 
+func (g *game) toggleRun() {
+	if g.paused {
+		g.play()
+	} else {
+		g.pause()
+	}
+}
+
 func (g *game) play() {
 	g.paused = false
 	g.playButton.SetText("PAUSE")
@@ -299,5 +300,9 @@ func (g *game) setKeyPressListener() {
 			}
 		}
 		g.speedRadioButtons.SetSelected(g.speedList[index])
+
+		if ke.Name == fyne.KeySpace {
+			g.toggleRun()
+		}
 	})
 }
