@@ -304,5 +304,12 @@ func (g *game) setKeyPressListener() {
 		if ke.Name == fyne.KeySpace {
 			g.toggleRun()
 		}
+
+		if ke.Name == fyne.KeyC {
+			if !g.paused {
+				return
+			}
+			g.showClearConfirmDialog()
+		}
 	})
 }
