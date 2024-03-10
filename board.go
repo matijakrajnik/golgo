@@ -76,9 +76,16 @@ func (b *board) nextGen() {
 }
 
 func (b *board) saveStartPattern() {
-	for i := 0; i < b.height; i++ {
-		copy(b.genStart[i], b.genCurrent[i])
+	for i, row := range b.genCurrent {
+		copy(b.genStart[i], row)
 	}
+}
+
+func (b *board) setStartingPattern(pattern [][]bool) {
+	for i, row := range pattern {
+		copy(b.genCurrent[i], row)
+	}
+	b.saveStartPattern()
 }
 
 func (b *board) isAlive(x, y int) bool {

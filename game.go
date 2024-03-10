@@ -189,6 +189,8 @@ func (g *game) buildResizeDialog() dialog.Dialog {
 			g.stop()
 			theGame = newGame()
 			mainWindow.SetContent(theGame.buildUI())
+			mainWindow.SetMainMenu(newMenu(theGame))
+			theGame.setKeyPressListener(mainWindow)
 			theGame.run()
 		}
 	}, mainWindow)

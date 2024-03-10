@@ -5,16 +5,20 @@ import (
 	"strconv"
 )
 
+const (
+	minBoardSize = 10
+	maxBoardSize = 100
+)
+
 func boardSizeValidator(s string) error {
-	min, max := 15, 100
-	returnErr := fmt.Errorf("value must be a number between %d and %d", min, max)
+	returnErr := fmt.Errorf("value must be a number between %d and %d", minBoardSize, maxBoardSize)
 
 	n, err := strconv.Atoi(s)
 	if err != nil {
 		return returnErr
 	}
 
-	if n < min || n > max {
+	if n < minBoardSize || n > maxBoardSize {
 		return returnErr
 	}
 
