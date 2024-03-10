@@ -5,7 +5,9 @@ import (
 	"strings"
 
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/widget"
 )
 
 func newMenu(g *game) *fyne.MainMenu {
@@ -13,6 +15,7 @@ func newMenu(g *game) *fyne.MainMenu {
 		newFileMenu(g),
 		newPatternMenu(g),
 		newBoardMenu(g),
+		newHelpMenu(g),
 	)
 }
 
@@ -125,4 +128,17 @@ func newBoardMenu(g *game) *fyne.Menu {
 	})
 
 	return fyne.NewMenu("Board", clearItem, resizeItem)
+}
+
+func newHelpMenu(*game) *fyne.Menu {
+	shortcutsItem := fyne.NewMenuItem("Shortcuts", func() {
+		content := container.NewVBox(
+			widget.NewLabel("Speed up:\t\t<KeyUp>"),
+			widget.NewSeparator(),
+			widget.NewLabel("Speed down:\t<KeyDown>"),
+			widget.NewSeparator(),
+		)
+		dialog.NewCustom("SHORTCUTS", "CLOSE", content, mainWindow).Show()
+	})
+	return fyne.NewMenu("Help", shortcutsItem)
 }
