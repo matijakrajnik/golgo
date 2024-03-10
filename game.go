@@ -25,12 +25,11 @@ type game struct {
 	widget.BaseWidget
 	*board
 	sigChan           chan signal
-	patternSelect     *widget.Select
+	patternLabel      *widget.Label
 	generationLabel   *widget.Label
-	speedRadioButtons *widget.RadioGroup
 	playButton        *widget.Button
 	clearBoardButton  *widget.Button
-	resizeButton      *widget.Button
+	speedRadioButtons *widget.RadioGroup
 	speedList         []string
 	paused            bool
 	speed             int
@@ -50,7 +49,11 @@ func newGame() *game {
 
 func (g *game) buildUI() fyne.CanvasObject {
 	g.generationLabel = widget.NewLabel(g.genText())
-	g.patternSelect = generatePatterns(g)
+	g.generationLabel.Alignment = fyne.TextAlignCenter
+
+	g.patternLabel = widget.NewLabel("")
+	g.patternLabel.TextStyle.Bold = true
+	g.patternLabel.Alignment = fyne.TextAlignCenter
 
 	g.playButton = widget.NewButtonWithIcon("PLAY", theme.MediaPlayIcon(), func() {})
 	g.playButton.OnTapped = func() {
@@ -67,22 +70,13 @@ func (g *game) buildUI() fyne.CanvasObject {
 		g.reset()
 	})
 
+	g.clearBoardButton = widget.NewButtonWithIcon("", theme.DeleteIcon(), g.showClearConfirmDialog)
+
 	infiniteCheck := widget.NewCheck("Infinite board", func(b bool) {
 		g.board.infinite = b
 		preferences.SetBool(prefKeys[infiniteBoardKey], b)
 	})
 	infiniteCheck.SetChecked(preferences.BoolWithFallback(prefKeys[infiniteBoardKey], true))
-
-	g.clearBoardButton = widget.NewButtonWithIcon("", theme.DeleteIcon(), func() {})
-	g.clearBoardButton.OnTapped = func() {
-		dialog.ShowConfirm("Clear board", "This will clear all tiles on board. Continue?", func(confirmed bool) {
-			if confirmed {
-				g.patternSelect.ClearSelected()
-				g.board.initGrid()
-				g.reset()
-			}
-		}, mainWindow)
-	}
 
 	g.speedRadioButtons = widget.NewRadioGroup(g.speedList, func(s string) {})
 	g.speedRadioButtons.Horizontal = true
@@ -115,63 +109,68 @@ func (g *game) buildUI() fyne.CanvasObject {
 	}
 	widthLabel := widget.NewLabelWithData(widthLabelBind)
 
-	g.resizeButton = widget.NewButton("RESIZE", func() { g.buildResizeDialog().Show() })
-
 	return container.NewBorder(
 		container.NewBorder(nil, nil,
 			container.NewHBox(
-				widget.NewLabel("Pattern:"),
-				g.patternSelect,
-				widget.NewSeparator(),
+				widget.NewLabel("\t\t"),
 				g.playButton,
-				resetButton,
-				widget.NewSeparator(),
-				infiniteCheck,
 			),
 			container.NewHBox(
+				resetButton,
+				widget.NewLabel("\t"),
 				g.clearBoardButton,
 			),
+			g.patternLabel,
 		),
 		container.NewBorder(nil, nil,
 			container.NewHBox(
 				widget.NewLabel("Speed:"),
 				g.speedRadioButtons,
-				widget.NewSeparator(),
-				g.generationLabel,
 			),
 			container.NewHBox(
-				g.resizeButton,
+				infiniteCheck,
 				widget.NewSeparator(),
-				heightLabel,
 				widthLabel,
+				heightLabel,
 			),
+			g.generationLabel,
 		),
 		nil, nil, g,
 	)
 }
 
-func (g *game) buildResizeDialog() dialog.Dialog {
-	heightEntry := widget.NewEntry()
-	heightEntry.Validator = boardSizeValidator
-	heightEntry.SetText(fmt.Sprint(g.board.height))
-	heightItem := widget.NewFormItem("Height:", heightEntry)
-	heightItem.HintText = "Number of board rows"
+func (g *game) showClearConfirmDialog() {
+	dialog.ShowConfirm("Clear board", "This will clear all tiles on board. Continue?", func(confirmed bool) {
+		if confirmed {
+			g.patternLabel.SetText("")
+			g.board.initGrid()
+			g.reset()
+		}
+	}, mainWindow)
+}
 
+func (g *game) buildResizeDialog() dialog.Dialog {
 	widthEntry := widget.NewEntry()
 	widthEntry.Validator = boardSizeValidator
 	widthEntry.SetText(fmt.Sprint(g.board.width))
 	widthItem := widget.NewFormItem("Width:", widthEntry)
 	widthItem.HintText = "Number of board columns"
 
-	defaultsButton := widget.NewButton("Reset default", func() {
+	heightEntry := widget.NewEntry()
+	heightEntry.Validator = boardSizeValidator
+	heightEntry.SetText(fmt.Sprint(g.board.height))
+	heightItem := widget.NewFormItem("Height:", heightEntry)
+	heightItem.HintText = "Number of board rows"
+
+	defaultsButton := widget.NewButton("RESET DEFAULTS", func() {
 		heightEntry.SetText(fmt.Sprint(defaultBoardHeight))
 		widthEntry.SetText(fmt.Sprint(defaultBoardWidth))
 	})
 	defaultsItem := widget.NewFormItem("", defaultsButton)
 
-	items := []*widget.FormItem{heightItem, widthItem, defaultsItem}
+	items := []*widget.FormItem{widthItem, heightItem, defaultsItem}
 
-	return dialog.NewForm("Resize board", "RESIZE", "CANCEL", items, func(confirmed bool) {
+	return dialog.NewForm("RESIZE BOARD", "RESIZE", "CANCEL", items, func(confirmed bool) {
 		if confirmed {
 			h, err := strconv.Atoi(heightEntry.Text)
 			if err != nil {
@@ -239,8 +238,6 @@ func (g *game) play() {
 	g.paused = false
 	g.playButton.SetText("PAUSE")
 	g.playButton.SetIcon(theme.MediaPauseIcon())
-	g.patternSelect.Disable()
-	g.resizeButton.Disable()
 	g.clearBoardButton.Disable()
 }
 
@@ -248,8 +245,6 @@ func (g *game) pause() {
 	g.paused = true
 	g.playButton.SetText("PLAY")
 	g.playButton.SetIcon(theme.MediaPlayIcon())
-	g.patternSelect.Enable()
-	g.resizeButton.Enable()
 	g.clearBoardButton.Enable()
 }
 
@@ -262,11 +257,7 @@ func (g *game) Tapped(event *fyne.PointEvent) {
 		return
 	}
 
-	if g.patternSelect.SelectedIndex() != -1 {
-		tmp := g.board.genCurrent
-		g.patternSelect.ClearSelected()
-		g.board.genCurrent = tmp
-	}
+	g.patternLabel.SetText("[CUSTOM PATTERN]")
 
 	offsetX, offsetY := g.board.calculateOffset(int(g.Size().Width), int(g.Size().Height))
 	clickedOutsideGrid := event.Position.X < float32(offsetX) ||

@@ -15,7 +15,7 @@ var (
 func main() {
 	app := app.NewWithID(appID)
 	loadPreferences(app)
-	mainWindow = app.NewWindow("Game of life")
+	mainWindow = app.NewWindow("GAME OF LIFE")
 	theGame = newGame()
 	mainWindow.Resize(fyne.Size{Width: 900, Height: 600})
 	mainWindow.CenterOnScreen()

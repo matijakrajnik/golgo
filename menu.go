@@ -2,14 +2,30 @@ package main
 
 import (
 	"os"
+	"strings"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/dialog"
 )
 
 func newMenu(g *game) *fyne.MainMenu {
-	exportMenuItem := fyne.NewMenuItem("Export board pattern", func() {
-		g.pause()
+	return fyne.NewMainMenu(
+		newFileMenu(g),
+		newPatternMenu(g),
+		newBoardMenu(g),
+	)
+}
+
+func showPauseInfoDialog(window fyne.Window) {
+	dialog.ShowInformation("INFO", "You need to pause the game first!", window)
+}
+
+func newFileMenu(g *game) *fyne.Menu {
+	exportItem := fyne.NewMenuItem("Export board pattern", func() {
+		if !g.paused {
+			showPauseInfoDialog(mainWindow)
+			return
+		}
 		generateTemplateDialog := dialog.NewFileSave(func(uc fyne.URIWriteCloser, err error) {
 			if err != nil {
 				dialog.ShowError(err, mainWindow)
@@ -27,7 +43,7 @@ func newMenu(g *game) *fyne.MainMenu {
 		generateTemplateDialog.Show()
 	})
 
-	importMenuItem := fyne.NewMenuItem("Import pattern", func() {
+	importItem := fyne.NewMenuItem("Import pattern", func() {
 		importTemplateDialog := dialog.NewFileOpen(func(uc fyne.URIReadCloser, err error) {
 			if err != nil {
 				dialog.ShowError(err, mainWindow)
@@ -71,9 +87,42 @@ func newMenu(g *game) *fyne.MainMenu {
 		importTemplateDialog.Show()
 	})
 
-	fileMenu := fyne.NewMenu("File", exportMenuItem, importMenuItem)
+	return fyne.NewMenu("File", exportItem, importItem)
+}
 
-	menu := fyne.NewMainMenu(fileMenu)
+func newPatternMenu(g *game) *fyne.Menu {
+	patternItems := make([]*fyne.MenuItem, len(patterns))
+	for i, name := range patterns {
+		patternItems[i] = fyne.NewMenuItem(name, func() {
+			g.pause()
+			g.board.initGrid()
+			midX, midY := g.board.width/2, g.board.height/2
+			drawPatternCallback[name](g.board, midX, midY)
+			g.board.saveStartPattern()
+			g.patternLabel.SetText(strings.ToUpper(name))
+			g.reset()
+		})
+	}
 
-	return menu
+	return fyne.NewMenu("Pattern", patternItems...)
+}
+
+func newBoardMenu(g *game) *fyne.Menu {
+	clearItem := fyne.NewMenuItem("Clear", func() {
+		if !g.paused {
+			showPauseInfoDialog(mainWindow)
+			return
+		}
+		g.showClearConfirmDialog()
+	})
+
+	resizeItem := fyne.NewMenuItem("Resize\t", func() {
+		if !g.paused {
+			showPauseInfoDialog(mainWindow)
+			return
+		}
+		g.buildResizeDialog().Show()
+	})
+
+	return fyne.NewMenu("Board", clearItem, resizeItem)
 }
