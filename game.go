@@ -190,7 +190,7 @@ func (g *game) buildResizeDialog() dialog.Dialog {
 			theGame = newGame()
 			mainWindow.SetContent(theGame.buildUI())
 			mainWindow.SetMainMenu(newMenu(theGame))
-			theGame.setKeyPressListener(mainWindow)
+			theGame.setKeyPressListener()
 			theGame.run()
 		}
 	}, mainWindow)
@@ -289,8 +289,8 @@ func (g *game) Tapped(event *fyne.PointEvent) {
 
 func (g *game) TappedSecondary(*fyne.PointEvent) {}
 
-func (g *game) setKeyPressListener(window fyne.Window) {
-	window.Canvas().SetOnTypedKey(func(ke *fyne.KeyEvent) {
+func (g *game) setKeyPressListener() {
+	mainWindow.Canvas().SetOnTypedKey(func(ke *fyne.KeyEvent) {
 		index := 0
 		for i, v := range g.speedList {
 			if v == g.speedRadioButtons.Selected {

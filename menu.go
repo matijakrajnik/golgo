@@ -65,7 +65,7 @@ func newMenu(g *game) *fyne.MainMenu {
 			theGame.board.setStartingPattern(pattern)
 			mainWindow.SetContent(theGame.buildUI())
 			mainWindow.SetMainMenu(newMenu(theGame))
-			theGame.setKeyPressListener(mainWindow)
+			theGame.setKeyPressListener()
 			theGame.run()
 		}, mainWindow)
 		importTemplateDialog.Show()

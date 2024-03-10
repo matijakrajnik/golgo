@@ -21,7 +21,7 @@ func main() {
 	mainWindow.CenterOnScreen()
 	mainWindow.SetContent(theGame.buildUI())
 	mainWindow.SetMainMenu(newMenu(theGame))
-	theGame.setKeyPressListener(mainWindow)
+	theGame.setKeyPressListener()
 	theGame.run()
 	mainWindow.ShowAndRun()
 }
