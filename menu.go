@@ -132,7 +132,7 @@ func newBoardMenu(g *game) *fyne.Menu {
 
 func newHelpMenu(*game) *fyne.Menu {
 	shortcutsItem := fyne.NewMenuItem("Shortcuts", func() {
-		content := container.NewGridWithColumns(2,
+		content := container.NewBorder(nil, widget.NewSeparator(),
 			container.NewVBox(
 				widget.NewLabel("Play/Pause:"),
 				widget.NewLabel("Speed up:"),
@@ -146,5 +146,20 @@ func newHelpMenu(*game) *fyne.Menu {
 		)
 		dialog.NewCustom("SHORTCUTS", "CLOSE", content, mainWindow).Show()
 	})
-	return fyne.NewMenu("Help", shortcutsItem)
+
+	aboutItem := fyne.NewMenuItem("About", func() {
+		content := container.NewBorder(nil, widget.NewSeparator(),
+			container.NewVBox(
+				widget.NewLabel("Author:"),
+				widget.NewLabel("Website:"),
+			),
+			container.NewVBox(
+				widget.NewLabelWithStyle("Matija Krajnik", fyne.TextAlignLeading, fyne.TextStyle{Bold: true}),
+				widget.NewLabelWithStyle("https://github.com/matijakrajnik/golgo", fyne.TextAlignLeading, fyne.TextStyle{Bold: true}),
+			),
+		)
+		dialog.NewCustom("ABOUT", "CLOSE", content, mainWindow).Show()
+	})
+
+	return fyne.NewMenu("Help", shortcutsItem, aboutItem)
 }
