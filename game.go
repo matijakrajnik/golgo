@@ -133,7 +133,7 @@ func (g *game) buildUI() fyne.CanvasObject {
 }
 
 func (g *game) showClearConfirmDialog() {
-	dialog.ShowConfirm("Clear board", "This will clear all tiles on board. Continue?", func(confirmed bool) {
+	dialog.ShowConfirm("CLEAR BOARD", "This will clear all tiles on board. Continue?", func(confirmed bool) {
 		if confirmed {
 			g.patternLabel.SetText("")
 			g.board.initGrid()
