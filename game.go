@@ -57,11 +57,7 @@ func (g *game) buildUI() fyne.CanvasObject {
 
 	g.playButton = widget.NewButtonWithIcon("PLAY", theme.MediaPlayIcon(), g.toggleRun)
 
-	resetButton := widget.NewButtonWithIcon("RESET", theme.MediaReplayIcon(), func() {
-		g.pause()
-		g.board.restart()
-		g.reset()
-	})
+	resetButton := widget.NewButtonWithIcon("RESET", theme.MediaReplayIcon(), g.showResetConfirmDialog)
 
 	g.clearBoardButton = widget.NewButtonWithIcon("", theme.DeleteIcon(), g.showClearConfirmDialog)
 
@@ -130,6 +126,16 @@ func (g *game) buildUI() fyne.CanvasObject {
 		),
 		nil, nil, g,
 	)
+}
+
+func (g *game) showResetConfirmDialog() {
+	dialog.ShowConfirm("RESET BOARD", "This will reset run to the beginning. Continue?", func(confirmed bool) {
+		if confirmed {
+			g.pause()
+			g.board.restart()
+			g.reset()
+		}
+	}, mainWindow)
 }
 
 func (g *game) showClearConfirmDialog() {
