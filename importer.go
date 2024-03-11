@@ -26,7 +26,6 @@ func generateTemplateBytes(pattern [][]bool) []byte {
 		s = strings.TrimSuffix(s, columnSeparator)
 		s += rowSeparator
 	}
-	s += rowSeparator
 
 	return []byte(s)
 }
@@ -54,7 +53,7 @@ func parseImportedPattern(bytes []byte) ([][]bool, error) {
 	for rowI, row := range rows {
 		column := strings.Split(row, columnSeparator)
 		if len(column) != columnsN {
-			return pattern, fmt.Errorf("unexpected number of columns in row %d ", rowI)
+			return pattern, fmt.Errorf("unexpected number of columns in row %d", rowI)
 		}
 		pattern[rowI] = make([]bool, columnsN)
 		for columnI, value := range column {
