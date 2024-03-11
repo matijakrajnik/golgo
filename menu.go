@@ -138,12 +138,14 @@ func newHelpMenu(*game) *fyne.Menu {
 				widget.NewLabel("Speed up:"),
 				widget.NewLabel("Speed down:"),
 				widget.NewLabel("Clear board:"),
+				widget.NewLabel("Reset run:"),
 			),
 			container.NewVBox(
 				widget.NewLabelWithStyle("<SpaceKey>", fyne.TextAlignLeading, fyne.TextStyle{Bold: true}),
 				widget.NewLabelWithStyle("<KeyUp>", fyne.TextAlignLeading, fyne.TextStyle{Bold: true}),
 				widget.NewLabelWithStyle("<KeyDown>", fyne.TextAlignLeading, fyne.TextStyle{Bold: true}),
 				widget.NewLabelWithStyle("<C>", fyne.TextAlignLeading, fyne.TextStyle{Bold: true}),
+				widget.NewLabelWithStyle("<R>", fyne.TextAlignLeading, fyne.TextStyle{Bold: true}),
 			),
 		)
 		dialog.NewCustom("SHORTCUTS", "CLOSE", content, mainWindow).Show()

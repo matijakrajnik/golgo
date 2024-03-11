@@ -317,5 +317,9 @@ func (g *game) setKeyPressListener() {
 			}
 			g.showClearConfirmDialog()
 		}
+
+		if ke.Name == fyne.KeyR {
+			g.showResetConfirmDialog()
+		}
 	})
 }
