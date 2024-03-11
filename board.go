@@ -15,13 +15,13 @@ type board struct {
 	infinite             bool
 }
 
-func newBoard() *board {
+func newBoard(width, height int, infinite bool) *board {
 	board := &board{
-		width:      preferences.IntWithFallback(prefKeys[boardWidthKey], defaultBoardWidth),
-		height:     preferences.IntWithFallback(prefKeys[boardHeightKey], defaultBoardHeight),
+		width:      width,
+		height:     height,
 		generation: 0,
 	}
-	board.infinite = preferences.BoolWithFallback(prefKeys[infiniteBoardKey], false)
+	board.infinite = infinite
 	board.initGrid()
 
 	return board

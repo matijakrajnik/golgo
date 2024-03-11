@@ -37,8 +37,12 @@ type game struct {
 
 func newGame() *game {
 	game := &game{
+		board: newBoard(
+			preferences.IntWithFallback(prefKeys[boardWidthKey], defaultBoardWidth),
+			preferences.IntWithFallback(prefKeys[boardHeightKey], defaultBoardHeight),
+			preferences.BoolWithFallback(prefKeys[infiniteBoardKey], false),
+		),
 		sigChan:   make(chan signal),
-		board:     newBoard(),
 		paused:    true,
 		speed:     preferences.IntWithFallback(prefKeys[speedKey], 1),
 		speedList: []string{"1x", "5x", "10x", "50x"},
