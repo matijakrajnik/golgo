@@ -286,3 +286,48 @@ func TestCalculateOffset(t *testing.T) {
 		assert.EqualValues(t, 3, offsetY)
 	})
 }
+
+func BenchmarkNewBoard(b *testing.B) {
+	sizes := []int{10, 50, 100}
+
+	for _, size := range sizes {
+		b.Run(fmt.Sprintf("BoardSize: %d", size), func(b *testing.B) {
+			newBoard(size, size, true)
+		})
+	}
+}
+
+func BenchmarkBoardNextGen(b *testing.B) {
+	sizes := []int{10, 50, 100}
+
+	for _, size := range sizes {
+		board := newBoard(size, size, true)
+		board.setStartingPattern(createTestImportPattern(size, size))
+		b.Run(fmt.Sprintf("BoardSize:%d", size), func(b *testing.B) {
+			board.nextGen()
+		})
+	}
+}
+
+func BenchmarkBoardSaveStartPattern(b *testing.B) {
+	sizes := []int{10, 50, 100}
+
+	for _, size := range sizes {
+		board := newBoard(size, size, true)
+		board.setStartingPattern(createTestImportPattern(size, size))
+		b.Run(fmt.Sprintf("BoardSize:%d", size), func(b *testing.B) {
+			board.saveStartPattern()
+		})
+	}
+}
+
+func BenchmarkBoardSetStartingPattern(b *testing.B) {
+	sizes := []int{10, 50, 100}
+
+	for _, size := range sizes {
+		board := newBoard(size, size, true)
+		b.Run(fmt.Sprintf("BoardSize:%d", size), func(b *testing.B) {
+			board.setStartingPattern(createTestImportPattern(size, size))
+		})
+	}
+}
