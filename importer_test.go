@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"strings"
 	"testing"
 
@@ -141,4 +142,26 @@ func TestParseImportedPattern(t *testing.T) {
 		assert.EqualValues(t, expectedError, err.Error())
 		assert.EqualValues(t, expected, parsed)
 	})
+}
+
+func BenchmarkImporterGenerateTemplateBytes(b *testing.B) {
+	sizes := []int{10, 50, 100}
+
+	for _, size := range sizes {
+		pattern := createTestImportPattern(size, size)
+		b.Run(fmt.Sprintf("PatternSize:%d", size), func(b *testing.B) {
+			generateTemplateBytes(pattern)
+		})
+	}
+}
+
+func BenchmarkImporterParseImportedPattern(b *testing.B) {
+	sizes := []int{10, 50, 100}
+
+	for _, size := range sizes {
+		bytes := createTestImportPatternBytes(size, size)
+		b.Run(fmt.Sprintf("PatternSize:%d", size), func(b *testing.B) {
+			parseImportedPattern(bytes)
+		})
+	}
 }
