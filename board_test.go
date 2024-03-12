@@ -7,8 +7,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var testFailCoordMsg = func(x, y int) string { return fmt.Sprintf("Unexpected value at [%d][%d]", x, y) }
-
 func TestBoardNextGen(t *testing.T) {
 	t.Run("Infinite", func(t *testing.T) {
 		b := newBoard(4, 4, true)
