@@ -22,25 +22,14 @@ func TestBoardNextGen(t *testing.T) {
 
 		b.nextGen()
 
-		assert.True(t, b.genCurrent[0][0], testFailCoordMsg(0, 0))
-		assert.False(t, b.genCurrent[0][1], testFailCoordMsg(0, 1))
-		assert.False(t, b.genCurrent[0][2], testFailCoordMsg(0, 2))
-		assert.False(t, b.genCurrent[0][3], testFailCoordMsg(0, 3))
+		expected := [][]bool{
+			{true, false, false, false},
+			{true, false, false, false},
+			{false, false, false, false},
+			{true, false, false, false},
+		}
 
-		assert.True(t, b.genCurrent[1][0], testFailCoordMsg(1, 0))
-		assert.False(t, b.genCurrent[1][1], testFailCoordMsg(1, 1))
-		assert.False(t, b.genCurrent[1][2], testFailCoordMsg(1, 2))
-		assert.False(t, b.genCurrent[1][3], testFailCoordMsg(1, 3))
-
-		assert.False(t, b.genCurrent[2][0], testFailCoordMsg(2, 0))
-		assert.False(t, b.genCurrent[2][1], testFailCoordMsg(2, 1))
-		assert.False(t, b.genCurrent[2][2], testFailCoordMsg(2, 2))
-		assert.False(t, b.genCurrent[2][3], testFailCoordMsg(2, 3))
-
-		assert.True(t, b.genCurrent[3][0], testFailCoordMsg(3, 0))
-		assert.False(t, b.genCurrent[3][1], testFailCoordMsg(3, 1))
-		assert.False(t, b.genCurrent[3][2], testFailCoordMsg(3, 2))
-		assert.False(t, b.genCurrent[3][3], testFailCoordMsg(3, 3))
+		assert.EqualValues(t, expected, b.genCurrent)
 	})
 
 	t.Run("NotInfinite", func(t *testing.T) {
@@ -55,28 +44,17 @@ func TestBoardNextGen(t *testing.T) {
 
 		b.nextGen()
 
-		assert.False(t, b.genCurrent[0][0], testFailCoordMsg(0, 0))
-		assert.False(t, b.genCurrent[0][1], testFailCoordMsg(0, 1))
-		assert.False(t, b.genCurrent[0][2], testFailCoordMsg(0, 2))
-		assert.False(t, b.genCurrent[0][3], testFailCoordMsg(0, 3))
+		expected := [][]bool{
+			{false, false, false, false},
+			{false, false, false, false},
+			{false, false, false, false},
+			{false, false, false, false},
+		}
 
-		assert.False(t, b.genCurrent[1][0], testFailCoordMsg(1, 0))
-		assert.False(t, b.genCurrent[1][1], testFailCoordMsg(1, 1))
-		assert.False(t, b.genCurrent[1][2], testFailCoordMsg(1, 2))
-		assert.False(t, b.genCurrent[1][3], testFailCoordMsg(1, 3))
-
-		assert.False(t, b.genCurrent[2][0], testFailCoordMsg(2, 0))
-		assert.False(t, b.genCurrent[2][1], testFailCoordMsg(2, 1))
-		assert.False(t, b.genCurrent[2][2], testFailCoordMsg(2, 2))
-		assert.False(t, b.genCurrent[2][3], testFailCoordMsg(2, 3))
-
-		assert.False(t, b.genCurrent[3][0], testFailCoordMsg(3, 0))
-		assert.False(t, b.genCurrent[3][1], testFailCoordMsg(3, 1))
-		assert.False(t, b.genCurrent[3][2], testFailCoordMsg(3, 2))
-		assert.False(t, b.genCurrent[3][3], testFailCoordMsg(3, 3))
+		assert.EqualValues(t, expected, b.genCurrent)
 	})
 
-	t.Run("LiveCellWithoutLiveNeighbourDies", func(t *testing.T) {
+	t.Run("AliveCellWithoutAliveNeighbourDies", func(t *testing.T) {
 		b := newBoard(3, 3, false)
 
 		b.setStartingPattern([][]bool{
@@ -87,20 +65,16 @@ func TestBoardNextGen(t *testing.T) {
 
 		b.nextGen()
 
-		assert.False(t, b.genCurrent[0][0], testFailCoordMsg(0, 0))
-		assert.False(t, b.genCurrent[0][1], testFailCoordMsg(0, 1))
-		assert.False(t, b.genCurrent[0][2], testFailCoordMsg(0, 2))
+		expected := [][]bool{
+			{false, false, false},
+			{false, false, false},
+			{false, false, false},
+		}
 
-		assert.False(t, b.genCurrent[1][0], testFailCoordMsg(1, 0))
-		assert.False(t, b.genCurrent[1][1], testFailCoordMsg(1, 1))
-		assert.False(t, b.genCurrent[1][2], testFailCoordMsg(1, 2))
-
-		assert.False(t, b.genCurrent[2][0], testFailCoordMsg(2, 0))
-		assert.False(t, b.genCurrent[2][1], testFailCoordMsg(2, 1))
-		assert.False(t, b.genCurrent[2][2], testFailCoordMsg(2, 2))
+		assert.EqualValues(t, expected, b.genCurrent)
 	})
 
-	t.Run("LiveCellWithOneLiveNeighbourDies", func(t *testing.T) {
+	t.Run("AliveCellWithOneAliveNeighbourDies", func(t *testing.T) {
 		b := newBoard(3, 3, false)
 
 		b.setStartingPattern([][]bool{
@@ -111,20 +85,16 @@ func TestBoardNextGen(t *testing.T) {
 
 		b.nextGen()
 
-		assert.False(t, b.genCurrent[0][0], testFailCoordMsg(0, 0))
-		assert.False(t, b.genCurrent[0][1], testFailCoordMsg(0, 1))
-		assert.False(t, b.genCurrent[0][2], testFailCoordMsg(0, 2))
+		expected := [][]bool{
+			{false, false, false},
+			{false, false, false},
+			{false, false, false},
+		}
 
-		assert.False(t, b.genCurrent[1][0], testFailCoordMsg(1, 0))
-		assert.False(t, b.genCurrent[1][1], testFailCoordMsg(1, 1))
-		assert.False(t, b.genCurrent[1][2], testFailCoordMsg(1, 2))
-
-		assert.False(t, b.genCurrent[2][0], testFailCoordMsg(2, 0))
-		assert.False(t, b.genCurrent[2][1], testFailCoordMsg(2, 1))
-		assert.False(t, b.genCurrent[2][2], testFailCoordMsg(2, 2))
+		assert.EqualValues(t, expected, b.genCurrent)
 	})
 
-	t.Run("LiveCellWithTwoLiveNeighbourLives", func(t *testing.T) {
+	t.Run("AliveCellWithTwoAliveNeighbourLives", func(t *testing.T) {
 		b := newBoard(3, 3, false)
 
 		b.setStartingPattern([][]bool{
@@ -135,20 +105,16 @@ func TestBoardNextGen(t *testing.T) {
 
 		b.nextGen()
 
-		assert.False(t, b.genCurrent[0][0], testFailCoordMsg(0, 0))
-		assert.False(t, b.genCurrent[0][1], testFailCoordMsg(0, 1))
-		assert.False(t, b.genCurrent[0][2], testFailCoordMsg(0, 2))
+		expected := [][]bool{
+			{false, false, false},
+			{false, true, false},
+			{false, false, false},
+		}
 
-		assert.False(t, b.genCurrent[1][0], testFailCoordMsg(1, 0))
-		assert.True(t, b.genCurrent[1][1], testFailCoordMsg(1, 1))
-		assert.False(t, b.genCurrent[1][2], testFailCoordMsg(1, 2))
-
-		assert.False(t, b.genCurrent[2][0], testFailCoordMsg(2, 0))
-		assert.False(t, b.genCurrent[2][1], testFailCoordMsg(2, 1))
-		assert.False(t, b.genCurrent[2][2], testFailCoordMsg(2, 2))
+		assert.EqualValues(t, expected, b.genCurrent)
 	})
 
-	t.Run("LiveCellWithThreeLiveNeighbourLives", func(t *testing.T) {
+	t.Run("AliveCellWithThreeAliveNeighbourLives", func(t *testing.T) {
 		b := newBoard(3, 3, false)
 
 		b.setStartingPattern([][]bool{
@@ -159,20 +125,16 @@ func TestBoardNextGen(t *testing.T) {
 
 		b.nextGen()
 
-		assert.False(t, b.genCurrent[0][0], testFailCoordMsg(0, 0))
-		assert.True(t, b.genCurrent[0][1], testFailCoordMsg(0, 1))
-		assert.False(t, b.genCurrent[0][2], testFailCoordMsg(0, 2))
+		expected := [][]bool{
+			{false, true, false},
+			{true, true, false},
+			{false, false, false},
+		}
 
-		assert.True(t, b.genCurrent[1][0], testFailCoordMsg(1, 0))
-		assert.True(t, b.genCurrent[1][1], testFailCoordMsg(1, 1))
-		assert.False(t, b.genCurrent[1][2], testFailCoordMsg(1, 2))
-
-		assert.False(t, b.genCurrent[2][0], testFailCoordMsg(2, 0))
-		assert.False(t, b.genCurrent[2][1], testFailCoordMsg(2, 1))
-		assert.False(t, b.genCurrent[2][2], testFailCoordMsg(2, 2))
+		assert.EqualValues(t, expected, b.genCurrent)
 	})
 
-	t.Run("LiveCellWithFourLiveNeighbourDies", func(t *testing.T) {
+	t.Run("AliveCellWithFourAliveNeighbourDies", func(t *testing.T) {
 		b := newBoard(3, 3, false)
 
 		b.setStartingPattern([][]bool{
@@ -183,20 +145,16 @@ func TestBoardNextGen(t *testing.T) {
 
 		b.nextGen()
 
-		assert.False(t, b.genCurrent[0][0], testFailCoordMsg(0, 0))
-		assert.True(t, b.genCurrent[0][1], testFailCoordMsg(0, 1))
-		assert.False(t, b.genCurrent[0][2], testFailCoordMsg(0, 2))
+		expected := [][]bool{
+			{false, true, false},
+			{true, false, true},
+			{false, true, false},
+		}
 
-		assert.True(t, b.genCurrent[1][0], testFailCoordMsg(1, 0))
-		assert.False(t, b.genCurrent[1][1], testFailCoordMsg(1, 1))
-		assert.True(t, b.genCurrent[1][2], testFailCoordMsg(1, 2))
-
-		assert.False(t, b.genCurrent[2][0], testFailCoordMsg(2, 0))
-		assert.True(t, b.genCurrent[2][1], testFailCoordMsg(2, 1))
-		assert.False(t, b.genCurrent[2][2], testFailCoordMsg(2, 2))
+		assert.EqualValues(t, expected, b.genCurrent)
 	})
 
-	t.Run("DeadCellWithThreeLiveNeighbourResurects", func(t *testing.T) {
+	t.Run("DeadCellWithThreeAliveNeighbourResurects", func(t *testing.T) {
 		b := newBoard(3, 3, false)
 
 		b.setStartingPattern([][]bool{
@@ -207,17 +165,13 @@ func TestBoardNextGen(t *testing.T) {
 
 		b.nextGen()
 
-		assert.False(t, b.genCurrent[0][0], testFailCoordMsg(0, 0))
-		assert.True(t, b.genCurrent[0][1], testFailCoordMsg(0, 1))
-		assert.False(t, b.genCurrent[0][2], testFailCoordMsg(0, 2))
+		expected := [][]bool{
+			{false, true, false},
+			{false, true, false},
+			{false, false, false},
+		}
 
-		assert.False(t, b.genCurrent[1][0], testFailCoordMsg(1, 0))
-		assert.True(t, b.genCurrent[1][1], testFailCoordMsg(1, 1))
-		assert.False(t, b.genCurrent[1][2], testFailCoordMsg(1, 2))
-
-		assert.False(t, b.genCurrent[2][0], testFailCoordMsg(2, 0))
-		assert.False(t, b.genCurrent[2][1], testFailCoordMsg(2, 1))
-		assert.False(t, b.genCurrent[2][2], testFailCoordMsg(2, 2))
+		assert.EqualValues(t, expected, b.genCurrent)
 	})
 }
 
@@ -230,17 +184,13 @@ func TestSaveStartPattern(t *testing.T) {
 
 	b.saveStartPattern()
 
-	assert.True(t, b.genStart[0][0], testFailCoordMsg(0, 0))
-	assert.True(t, b.genStart[0][1], testFailCoordMsg(0, 1))
-	assert.True(t, b.genStart[0][2], testFailCoordMsg(0, 2))
+	expected := [][]bool{
+		{true, true, true},
+		{false, false, false},
+		{false, false, false},
+	}
 
-	assert.False(t, b.genStart[1][0], testFailCoordMsg(1, 0))
-	assert.False(t, b.genStart[1][1], testFailCoordMsg(1, 1))
-	assert.False(t, b.genStart[1][2], testFailCoordMsg(1, 2))
-
-	assert.False(t, b.genStart[2][0], testFailCoordMsg(2, 0))
-	assert.False(t, b.genStart[2][1], testFailCoordMsg(2, 1))
-	assert.False(t, b.genStart[2][2], testFailCoordMsg(2, 2))
+	assert.EqualValues(t, expected, b.genCurrent)
 }
 
 func TestRestart(t *testing.T) {
@@ -248,22 +198,19 @@ func TestRestart(t *testing.T) {
 
 	b.setCell(0, 0)
 	b.setCell(1, 0)
-	b.setCell(3, 0)
+	b.setCell(2, 0)
+
+	expected := [][]bool{
+		{true, true, true},
+		{false, false, false},
+		{false, false, false},
+	}
 
 	b.nextGen()
+
+	assert.NotEqualValues(t, expected, b.genCurrent)
 	b.restart()
-
-	assert.True(t, b.genCurrent[0][0], testFailCoordMsg(0, 0))
-	assert.True(t, b.genCurrent[0][1], testFailCoordMsg(0, 1))
-	assert.False(t, b.genCurrent[0][2], testFailCoordMsg(0, 2))
-
-	assert.False(t, b.genCurrent[1][0], testFailCoordMsg(1, 0))
-	assert.False(t, b.genCurrent[1][1], testFailCoordMsg(1, 1))
-	assert.False(t, b.genCurrent[1][2], testFailCoordMsg(1, 2))
-
-	assert.False(t, b.genCurrent[2][0], testFailCoordMsg(2, 0))
-	assert.False(t, b.genCurrent[2][1], testFailCoordMsg(2, 1))
-	assert.False(t, b.genCurrent[2][2], testFailCoordMsg(2, 2))
+	assert.EqualValues(t, expected, b.genCurrent)
 }
 
 func TestSetStartingPattern(t *testing.T) {
@@ -276,45 +223,13 @@ func TestSetStartingPattern(t *testing.T) {
 		{false, false, false, false},
 	})
 
-	assert.True(t, b.genCurrent[0][0], testFailCoordMsg(0, 0))
-	assert.True(t, b.genCurrent[0][1], testFailCoordMsg(0, 1))
-	assert.False(t, b.genCurrent[0][2], testFailCoordMsg(0, 2))
-	assert.True(t, b.genCurrent[0][3], testFailCoordMsg(0, 3))
-
-	assert.False(t, b.genCurrent[1][0], testFailCoordMsg(1, 0))
-	assert.False(t, b.genCurrent[1][1], testFailCoordMsg(1, 1))
-	assert.False(t, b.genCurrent[1][2], testFailCoordMsg(1, 2))
-	assert.False(t, b.genCurrent[1][3], testFailCoordMsg(1, 3))
-
-	assert.False(t, b.genCurrent[2][0], testFailCoordMsg(2, 0))
-	assert.False(t, b.genCurrent[2][1], testFailCoordMsg(2, 1))
-	assert.False(t, b.genCurrent[2][2], testFailCoordMsg(2, 2))
-	assert.False(t, b.genCurrent[2][3], testFailCoordMsg(2, 3))
-
-	assert.False(t, b.genCurrent[3][0], testFailCoordMsg(3, 0))
-	assert.False(t, b.genCurrent[3][1], testFailCoordMsg(3, 1))
-	assert.False(t, b.genCurrent[3][2], testFailCoordMsg(3, 2))
-	assert.False(t, b.genCurrent[3][3], testFailCoordMsg(3, 3))
-
-	assert.True(t, b.genStart[0][0], testFailCoordMsg(0, 0))
-	assert.True(t, b.genStart[0][1], testFailCoordMsg(0, 1))
-	assert.False(t, b.genStart[0][2], testFailCoordMsg(0, 2))
-	assert.True(t, b.genStart[0][3], testFailCoordMsg(0, 3))
-
-	assert.False(t, b.genStart[1][0], testFailCoordMsg(1, 0))
-	assert.False(t, b.genStart[1][1], testFailCoordMsg(1, 1))
-	assert.False(t, b.genStart[1][2], testFailCoordMsg(1, 2))
-	assert.False(t, b.genStart[1][3], testFailCoordMsg(1, 3))
-
-	assert.False(t, b.genStart[2][0], testFailCoordMsg(2, 0))
-	assert.False(t, b.genStart[2][1], testFailCoordMsg(2, 1))
-	assert.False(t, b.genStart[2][2], testFailCoordMsg(2, 2))
-	assert.False(t, b.genStart[2][3], testFailCoordMsg(2, 3))
-
-	assert.False(t, b.genStart[3][0], testFailCoordMsg(3, 0))
-	assert.False(t, b.genStart[3][1], testFailCoordMsg(3, 1))
-	assert.False(t, b.genStart[3][2], testFailCoordMsg(3, 2))
-	assert.False(t, b.genStart[3][3], testFailCoordMsg(3, 3))
+	expected := [][]bool{
+		{true, true, false, true},
+		{false, false, false, false},
+		{false, false, false, false},
+		{false, false, false, false},
+	}
+	assert.EqualValues(t, expected, b.genCurrent)
 }
 
 func TestSetCell(t *testing.T) {
@@ -322,24 +237,24 @@ func TestSetCell(t *testing.T) {
 		b := newBoard(2, 2, false)
 
 		b.setCell(1, 0)
-		b.saveStartPattern()
 
-		assert.False(t, b.genCurrent[0][0], testFailCoordMsg(0, 0))
-		assert.True(t, b.genCurrent[0][1], testFailCoordMsg(0, 1))
-		assert.False(t, b.genCurrent[1][0], testFailCoordMsg(1, 0))
-		assert.False(t, b.genCurrent[1][1], testFailCoordMsg(1, 1))
+		expected := [][]bool{
+			{false, true},
+			{false, false},
+		}
+		assert.EqualValues(t, expected, b.genCurrent)
 	})
 
 	t.Run("CoordinatesWithoutBorder", func(t *testing.T) {
 		b := newBoard(2, 2, false)
 
 		b.setCell(-1, -1)
-		b.saveStartPattern()
 
-		assert.False(t, b.genCurrent[0][0], testFailCoordMsg(0, 0))
-		assert.False(t, b.genCurrent[0][1], testFailCoordMsg(0, 1))
-		assert.False(t, b.genCurrent[1][0], testFailCoordMsg(1, 0))
-		assert.False(t, b.genCurrent[1][1], testFailCoordMsg(1, 1))
+		expected := [][]bool{
+			{false, false},
+			{false, false},
+		}
+		assert.EqualValues(t, expected, b.genCurrent)
 	})
 }
 
