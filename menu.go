@@ -80,7 +80,7 @@ func newFileMenu(g *game) *fyne.Menu {
 			preferences.SetInt(prefKeys[boardWidthKey], len(pattern[0]))
 
 			g.stop()
-			theGame = newGame()
+			theGame = newGame(gameParamsFromPrefs())
 			theGame.board.setStartingPattern(pattern)
 			mainWindow.SetContent(theGame.buildUI())
 			mainWindow.SetMainMenu(newMenu(theGame))

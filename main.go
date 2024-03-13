@@ -16,7 +16,7 @@ func main() {
 	app := app.NewWithID(appID)
 	loadPreferences(app)
 	mainWindow = app.NewWindow("GAME OF LIFE")
-	theGame = newGame()
+	theGame = newGame(gameParamsFromPrefs())
 	mainWindow.Resize(fyne.Size{Width: 900, Height: 600})
 	mainWindow.CenterOnScreen()
 	mainWindow.SetContent(theGame.buildUI())

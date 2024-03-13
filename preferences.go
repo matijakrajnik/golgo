@@ -23,3 +23,12 @@ var prefKeys = map[prefKey]string{
 func loadPreferences(app fyne.App) {
 	preferences = app.Preferences()
 }
+
+func gameParamsFromPrefs() gameParams {
+	return gameParams{
+		width:         preferences.IntWithFallback(prefKeys[boardWidthKey], defaultBoardWidth),
+		height:        preferences.IntWithFallback(prefKeys[boardHeightKey], defaultBoardHeight),
+		infiniteBoard: preferences.BoolWithFallback(prefKeys[infiniteBoardKey], false),
+		boardSpeed:    preferences.IntWithFallback(prefKeys[speedKey], 1),
+	}
+}

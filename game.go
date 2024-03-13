@@ -35,16 +35,19 @@ type game struct {
 	speed             int
 }
 
-func newGame() *game {
+type gameParams struct {
+	width         int
+	height        int
+	infiniteBoard bool
+	boardSpeed    int
+}
+
+func newGame(gp gameParams) *game {
 	game := &game{
-		board: newBoard(
-			preferences.IntWithFallback(prefKeys[boardWidthKey], defaultBoardWidth),
-			preferences.IntWithFallback(prefKeys[boardHeightKey], defaultBoardHeight),
-			preferences.BoolWithFallback(prefKeys[infiniteBoardKey], false),
-		),
+		board:     newBoard(gp.width, gp.height, gp.infiniteBoard),
 		sigChan:   make(chan signal),
 		paused:    true,
-		speed:     preferences.IntWithFallback(prefKeys[speedKey], 1),
+		speed:     gp.boardSpeed,
 		speedList: []string{"1x", "5x", "10x", "50x"},
 	}
 	game.ExtendBaseWidget(game)
@@ -189,7 +192,7 @@ func (g *game) buildResizeDialog() dialog.Dialog {
 			preferences.SetInt(prefKeys[boardWidthKey], w)
 
 			g.stop()
-			theGame = newGame()
+			theGame = newGame(gameParamsFromPrefs())
 			mainWindow.SetContent(theGame.buildUI())
 			mainWindow.SetMainMenu(newMenu(theGame))
 			theGame.setKeyPressListener()
@@ -268,8 +271,6 @@ func (g *game) Tapped(event *fyne.PointEvent) {
 		return
 	}
 
-	g.patternLabel.SetText("[CUSTOM PATTERN]")
-
 	offsetX, offsetY := g.board.calculateOffset(int(g.Size().Width), int(g.Size().Height))
 	clickedOutsideGrid := event.Position.X < float32(offsetX) ||
 		event.Position.Y < float32(offsetY) ||
@@ -279,6 +280,8 @@ func (g *game) Tapped(event *fyne.PointEvent) {
 	if clickedOutsideGrid {
 		return
 	}
+
+	g.patternLabel.SetText("[CUSTOM PATTERN]")
 
 	cellX := int(event.Position.X-float32(offsetX)) / g.board.xCellSize
 	cellY := int(event.Position.Y-float32(offsetY)) / g.board.yCellSize
