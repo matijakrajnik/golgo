@@ -1,6 +1,7 @@
 package main
 
 import (
+	"net/url"
 	"os"
 	"strings"
 
@@ -159,7 +160,11 @@ func newHelpMenu(*game) *fyne.Menu {
 			),
 			container.NewVBox(
 				widget.NewLabelWithStyle("Matija Krajnik", fyne.TextAlignLeading, fyne.TextStyle{Bold: true}),
-				widget.NewLabelWithStyle("https://github.com/matijakrajnik/golgo", fyne.TextAlignLeading, fyne.TextStyle{Bold: true}),
+				widget.NewHyperlinkWithStyle("https://github.com/matijakrajnik/golgo", &url.URL{
+					Scheme: "https",
+					Host:   "github.com",
+					Path:   "matijakrajnik/golgo",
+				}, fyne.TextAlignLeading, fyne.TextStyle{Bold: true}),
 			),
 		)
 		dialog.NewCustom("ABOUT", "CLOSE", content, mainWindow).Show()
